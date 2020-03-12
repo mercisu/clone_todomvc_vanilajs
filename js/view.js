@@ -40,36 +40,36 @@
             showEntries: function () {
                 self.$todoList.innerHTML = self.template.show(parameter);
             },
-            removeItem: function () {
-                self._removeItem(parameter);
-            },
+            // removeItem: function () {
+            //     self._removeItem(parameter);
+            // },
             updateElementCount: function () {
                 self.$todoItemCounter.innerHTML = self.template.itemCounter(parameter);
             },
-            clearCompletedButton: function () {
-                self._clearCompletedButton(parameter.completed, parameter.visible);
-            },
-            contentBlockVisibility: function () {
-
-            },
-            toggleAll: function () {
-
-            },
-            setFilter: function () {
-
-            },
+            // clearCompletedButton: function () {
+            //     self._clearCompletedButton(parameter.completed, parameter.visible);
+            // },
+            // contentBlockVisibility: function () {
+            //
+            // },
+            // toggleAll: function () {
+            //
+            // },
+            // setFilter: function () {
+            //
+            // },
             clearNewTodo:function () {
-
+                self.$newTodo.value= '';
             },
             elementComplete: function () {
                 self._elementComplete(parameter.id, parameter.completed);
             },
-            editItem:function () {
-
-            },
-            editItemDone: function () {
-
-            }
+            // editItem:function () {
+            //
+            // },
+            // editItemDone: function () {
+            //
+            // }
         }
     }
 
@@ -90,6 +90,18 @@
         });
 
         $delegate(self.$todoList)
+    }
+
+    View.prototype._bindItemEditCancel = function(handler) {
+        var self = this;
+        $delegate(self.$todoList, 'li .edit', 'keyup', function (event) {
+            if (event.keyCode === self.ESCAPE_KEY) {
+                this.dataset.iscanceled = true;
+                this.blur();
+
+                handler({id:self._itemId(this)});
+            }
+        });
     }
 
     View.prototype.bind = function(event, handler) {

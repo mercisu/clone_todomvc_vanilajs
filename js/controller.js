@@ -66,16 +66,39 @@
         })
     }
 
-    Controller.prototype._updateFilterState = function(currentPage) {
-        this._activeRoute = currentPage;
+    Controller.prototype.addItem = function(title) {
+        var self = this;
 
-        if(currentPage ==='') {
-            this._activeRoute = 'All';
+        if(title.trim() ==='') {
+            return;
         }
 
-        this._filter();
-        this.view.render('setFilter', currentPage);
-    };
+        self.model.create(title, function () {
+            self.view.render('clearNewTodo');
+            self._filter(true);
+        })
+    }
+
+    Controller.prototype.toggleComplete = function(id, completed, silent) {
+        var self = this;
+        self.model.update(id,{ completed:completed }, function() {
+            self.view.render('elementComplete',{
+                id:id,
+                completed:completed
+            })
+        });
+        if(!silent) {
+            self._filter();
+        }
+    }
+
+    Controller.prototype.toggleAll = function(completed) {
+        var self = this;
+        self.model.read({completed:!completed}, function (data) {
+            self.toggleComplete(item.id, completed, true);
+        });
+        self._filter();
+    }
 
     Controller.prototype._updateCount = function () {
         var self = this;
@@ -86,8 +109,8 @@
                 visible: todos.completed > 0
             });
 
-            self.view.render('toggoleAll', {checked: todos.complted === todos.total});
-            self.view.render('contentBlockVisiviltiy', {visible:todos.total >0})
+            self.view.render('toggleAll', {checked: todos.complted === todos.total});
+            self.view.render('contentBlockVisibility', {visible:todos.total >0})
         })
     }
 
@@ -100,6 +123,17 @@
             this['show' + activeRoute]();
         }
         this._lastActiveRoute = activeRoute;
+    };
+
+    Controller.prototype._updateFilterState = function(currentPage) {
+        this._activeRoute = currentPage;
+
+        if(currentPage ==='') {
+            this._activeRoute = 'All';
+        }
+
+        this._filter();
+        this.view.render('setFilter', currentPage);
     };
 
     window.app = window.app || {};

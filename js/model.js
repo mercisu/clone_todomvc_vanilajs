@@ -5,6 +5,18 @@
         this.storage = storage;
     }
 
+    Model.prototype.create = function(title, callback) {
+        title = title || '';
+        callback = callback || function () {};
+
+        var newItem = {
+            title:title.trim(),
+            completed: false
+        };
+
+        this.storage.save(newItem, callback);
+    }
+
     Model.prototype.read = function(query, callback) {
         var queryType = typeof query;
         callback = callback || function () {}
