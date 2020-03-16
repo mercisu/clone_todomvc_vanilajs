@@ -16,6 +16,11 @@
        this.$newTodo = qs('.new-todo');
     }
 
+    View.prototype._setFilter = function(currentPage) {
+        qs('.filters .selected').className = '';
+        qs('.filters [href="#/'+currentPage +'"]').className = 'selected';
+    }
+
     View.prototype._elementComplete = function(id, completed) {
         var listItem = qs('[data-id="'+id+'"]');
         if(!listItem) {
@@ -32,6 +37,13 @@
         }
 
         listItem.className = listItem.className + ' editing';
+
+        var input = document.createElement('input');
+        input.className = 'edit';
+
+        listItem.appendChild(input);
+        input.focus();
+        input.value = title;
     }
 
     View.prototype.render = function(viewCmd, parameter) {
@@ -40,37 +52,39 @@
             showEntries: function () {
                 self.$todoList.innerHTML = self.template.show(parameter);
             },
-            // removeItem: function () {
-            //     self._removeItem(parameter);
-            // },
+            removeItem: function () {
+                self._removeItem(parameter);
+            },
             updateElementCount: function () {
                 self.$todoItemCounter.innerHTML = self.template.itemCounter(parameter);
             },
-            // clearCompletedButton: function () {
-            //     self._clearCompletedButton(parameter.completed, parameter.visible);
-            // },
-            // contentBlockVisibility: function () {
-            //
-            // },
-            // toggleAll: function () {
-            //
-            // },
-            // setFilter: function () {
-            //
-            // },
+            clearCompletedButton: function () {
+                self._clearCompletedButton(parameter.completed, parameter.visible);
+            },
+            contentBlockVisibility: function () {
+                self.$main.style.display = self.$footer.style.display = parameter.visible ? 'block': 'none';
+            },
+            toggleAll: function () {
+                self.$toggleAll.checked = parameter.checked;
+            },
+            setFilter: function () {
+                self._setFilter(parameter);
+            },
             clearNewTodo:function () {
                 self.$newTodo.value= '';
             },
             elementComplete: function () {
                 self._elementComplete(parameter.id, parameter.completed);
             },
-            // editItem:function () {
-            //
-            // },
-            // editItemDone: function () {
-            //
-            // }
+            editItem:function () {
+
+            },
+            editItemDone: function () {
+
+            }
         }
+
+        viewCommands[viewCmd]();
     }
 
     View.prototype._itemId = function(element) {
@@ -89,7 +103,11 @@
             }
         });
 
-        $delegate(self.$todoList)
+        $delegate(self.$todoList, 'li .edit', 'keypress', function (event) {
+            if(event.keyCode === self.ENTER_KEY) {
+                this.blur();
+            }
+        })
     }
 
     View.prototype._bindItemEditCancel = function(handler) {
@@ -116,7 +134,7 @@
             });
         } else if(event ==='toggleAll') {
             $on(self.$toggleAll, 'click', function () {
-                handler({complted:this.checked});
+                handler({completed:this.checked});
             });
         } else if(event ==='itemEdit') {
             $delegate(self.$todoList, 'li label', 'dblclick', function () {

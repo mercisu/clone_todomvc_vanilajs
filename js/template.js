@@ -41,7 +41,7 @@
             var completed = '';
             var checked = '';
 
-            if(data[i].complted) {
+            if(data[i].completed) {
                 completed = 'completed';
                 checked = 'checked';
             }
@@ -54,6 +54,19 @@
         }
 
         return view;
+    }
+
+    Template.prototype.itemCounter = function(activeTodos) {
+        var plural = activeTodos === 1? '' : 's';
+        return '<strong>' + activeTodos + '</strong> item' + plural + ' left';
+    }
+
+    Template.prototype.clearCompletedButton = function(completedTodos) {
+        if(completedTodos > 0) {
+            return 'Clear completed';
+        } else {
+            return '';
+        }
     }
 
     window.app = window.app || {};

@@ -32,6 +32,10 @@
         }
     }
 
+    Model.prototype.update = function(id, data, callback) {
+        this.storage.save(data, callback, id);
+    }
+
     Model.prototype.getCount = function(callback) {
         var todos = {
             active:0,

@@ -92,13 +92,40 @@
         }
     }
 
+    Controller.prototype.removeCompletedItems = function () {
+        var self = this;
+        self.model.read({completed: true}, function (data) {
+           data.forEach(function (item) {
+               self.removeItem(item.id);
+           });
+        });
+
+        self._filter();
+    }
+
+    Controller.prototype.toggleComplete = function(id, completed, silent) {
+        var self = this;
+        self.model.update(id, {completed:completed}, function () {
+            self.view.render('elementComplete',{
+                id:id,
+                completed:completed
+            });
+        });
+
+        if(!silent) {
+            self._filter();
+        }
+    }
+
     Controller.prototype.toggleAll = function(completed) {
         var self = this;
         self.model.read({completed:!completed}, function (data) {
-            self.toggleComplete(item.id, completed, true);
+            data.forEach(function (item) {
+                self.toggleComplete(item.id, completed, true);
+            });
         });
         self._filter();
-    }
+    };
 
     Controller.prototype._updateCount = function () {
         var self = this;
@@ -110,7 +137,7 @@
             });
 
             self.view.render('toggleAll', {checked: todos.complted === todos.total});
-            self.view.render('contentBlockVisibility', {visible:todos.total >0})
+            self.view.render('contentBlockVisibility', {visible:todos.total > 0})
         })
     }
 
