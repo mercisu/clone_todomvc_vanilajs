@@ -16,6 +16,18 @@
        this.$newTodo = qs('.new-todo');
     }
 
+    View.prototype._removeItem = function(id) {
+        var elem = qs('[data-id="'+ id + '"]');
+        if(elem) {
+            this.$todoList.removeChild(elem);
+        }
+    }
+
+    View.prototype._clearCompletedButton = function(completedCount, visible) {
+        this.$clearCompleted.innerHTML = this.template.clearCompletedButton(completedCount);
+        this.$clearCompleted.style.display = visible? 'block':'none';
+    }
+
     View.prototype._setFilter = function(currentPage) {
         qs('.filters .selected').className = '';
         qs('.filters [href="#/'+currentPage +'"]').className = 'selected';

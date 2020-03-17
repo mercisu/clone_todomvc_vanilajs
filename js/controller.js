@@ -79,6 +79,25 @@
         })
     }
 
+    Controller.prototype.editItem = function(id) {
+        var self = this;
+        self.model.read(id, function (data) {
+            self.view.render('editItem', {id:id, title:data[0].title});
+        });
+    }
+
+    Controller.prototype.editItemSave = function(id, title) {
+        var self = this;
+        title = title.trim();
+        if(title.length !== 0) {
+            self.model.update(id, {title: title}, function () {
+                self.view.render('editItemDone', {id: id, title: title});
+            });
+        } else {
+            self.removeItem(id);
+        }
+    }
+
     Controller.prototype.toggleComplete = function(id, completed, silent) {
         var self = this;
         self.model.update(id,{ completed:completed }, function() {
@@ -90,6 +109,15 @@
         if(!silent) {
             self._filter();
         }
+    }
+
+    Controller.prototype.removeItem = function(id) {
+        var self = this;
+        self.model.remove(id, function () {
+            self.view.render('removeItem',id);
+        });
+
+        self._filter();
     }
 
     Controller.prototype.removeCompletedItems = function () {

@@ -36,6 +36,10 @@
         this.storage.save(data, callback, id);
     }
 
+    Model.prototype.remove = function(id, callback) {
+        this.storage.remove(id, callback);
+    }
+
     Model.prototype.getCount = function(callback) {
         var todos = {
             active:0,
