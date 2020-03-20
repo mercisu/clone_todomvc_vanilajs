@@ -58,6 +58,20 @@
         input.value = title;
     }
 
+    View.prototype._editItemDone = function(id,title) {
+        var listItem = qs('[data-id"'+ id + '"]');
+        if(!listItem) {
+            return;
+        }
+
+        var input = qs('input.edit', listItem);
+        listItem.removeChild(input);
+        listItem.className = listItem.className.replace('editing','');
+        qsa('label', listItem).forEach(function (label) {
+            label.textContent = title;
+        });
+    }
+
     View.prototype.render = function(viewCmd, parameter) {
         var self = this;
         var viewCommands = {
@@ -89,10 +103,10 @@
                 self._elementComplete(parameter.id, parameter.completed);
             },
             editItem:function () {
-
+                self._editItem(parameter.id, parameter.title);
             },
             editItemDone: function () {
-
+                self._editItemDone(parameter.id, parameter.title);
             }
         }
 
