@@ -43,7 +43,7 @@
     }
 
     View.prototype._editItem = function(id, title) {
-        var listItem = qs('[data-id"' + id +'"]');
+        var listItem = qs('[data-id="' + id +'"]');
         if(!listItem) {
             return;
         }
@@ -59,7 +59,7 @@
     }
 
     View.prototype._editItemDone = function(id,title) {
-        var listItem = qs('[data-id"'+ id + '"]');
+        var listItem = qs('[data-id="'+ id + '"]');
         if(!listItem) {
             return;
         }

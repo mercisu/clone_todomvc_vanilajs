@@ -19,7 +19,7 @@
         });
 
         self.view.bind('itemEditCancel', function (item) {
-            self.view.editItemCancel(item.id);
+            self.editItemCancel(item.id);
         });
 
         self.view.bind('itemRemove', function (item) {
@@ -109,6 +109,13 @@
         if(!silent) {
             self._filter();
         }
+    }
+
+    Controller.prototype.editItemCancel = function(id) {
+        var self = this;
+        self.model.read(id,function (data) {
+            self.view.render('editItemDone', {id:id,title:data[0].title})
+        });
     }
 
     Controller.prototype.removeItem = function(id) {
