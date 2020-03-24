@@ -43,14 +43,14 @@
     Model.prototype.getCount = function(callback) {
         var todos = {
             active:0,
-            complted:0,
+            completed:0,
             total:0
         };
 
         this.storage.findAll(function (data) {
             data.forEach(function (todo) {
                 if(todo.completed) {
-                    todos.complted++;
+                    todos.completed++;
                 } else {
                     todos.active++;
                 }

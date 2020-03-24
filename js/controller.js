@@ -171,7 +171,7 @@
                 visible: todos.completed > 0
             });
 
-            self.view.render('toggleAll', {checked: todos.complted === todos.total});
+            self.view.render('toggleAll', {checked: todos.completed === todos.total});
             self.view.render('contentBlockVisibility', {visible:todos.total > 0})
         })
     }
